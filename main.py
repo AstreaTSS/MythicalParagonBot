@@ -2,6 +2,7 @@ import asyncio
 import contextlib
 import logging
 import os
+import sys
 from pathlib import Path
 
 import interactions as ipy
@@ -26,6 +27,7 @@ handler.setFormatter(
     logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
 )
 logger.addHandler(handler)
+logger.addHandler(logging.StreamHandler(sys.stdout))
 
 
 class MPBot(utils.MPBotBase):
