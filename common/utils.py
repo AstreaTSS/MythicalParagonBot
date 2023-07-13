@@ -58,11 +58,13 @@ async def error_handle(bot: ipy.Client, error: Exception, ctx: ipy.BaseContext =
     if ctx:
         if isinstance(ctx, prefixed.PrefixedContext):
             await ctx.reply(
-                "An internal error has occured. The bot owner has been notified."
+                embeds=error_embed_generate(
+                    "An internal error has occured. The bot owner has been notified."
+                )
             )
         elif isinstance(ctx, ipy.InteractionContext):
             await ctx.send(
-                content=(
+                embeds=error_embed_generate(
                     "An internal error has occured. The bot owner has been notified."
                 )
             )
