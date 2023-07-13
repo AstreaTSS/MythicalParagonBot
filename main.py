@@ -20,6 +20,7 @@ os.environ["LOG_FILE_PATH"] = f"{file_location}/discord.log"
 
 logger = logging.getLogger("mpbot")
 logger.setLevel(logging.INFO)
+
 handler = logging.FileHandler(
     filename=os.environ["LOG_FILE_PATH"], encoding="utf-8", mode="a"
 )
@@ -27,7 +28,12 @@ handler.setFormatter(
     logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
 )
 logger.addHandler(handler)
-logger.addHandler(logging.StreamHandler(sys.stdout))
+
+stream = logging.StreamHandler(sys.stdout)
+stream.setFormatter(
+    logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
+)
+logger.addHandler(stream)
 
 
 class MPBot(utils.MPBotBase):
