@@ -1,5 +1,5 @@
 discord-py-interactions[speedup]==5.7.0
 python-dotenv==1.0.0
 humanize==4.7.0
-orjson==3.9.1
+orjson==3.9.2
 uvloop==0.17.0; platform_system == "Linux"
