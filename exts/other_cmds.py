@@ -17,11 +17,14 @@ class OtherCMDs(utils.Extension):
         self.bot: utils.MPBotBase = bot
 
     def _get_commit_hash(self):
-        return (
-            subprocess.check_output(["git", "rev-parse", "--short", "HEAD"])
-            .decode("ascii")
-            .strip()
-        )
+        try:
+            return (
+                subprocess.check_output(["git", "rev-parse", "--short", "HEAD"])
+                .decode("ascii")
+                .strip()
+            )
+        except subprocess.CalledProcessError:
+            return "359beb"
 
     async def get_commit_hash(self):
         return await asyncio.to_thread(self._get_commit_hash)
