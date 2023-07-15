@@ -91,7 +91,7 @@ bot = MPBot(
     logger=logger,
 )
 bot.init_load = True
-bot.color = ipy.Color(int(os.environ["BOT_COLOR"]))  # 6528F7, aka 6629623
+bot.color = ipy.Color(int(os.environ["BOT_COLOR"]))  # 573ae5, aka 5716709
 prefixed.setup(bot)
 
 
