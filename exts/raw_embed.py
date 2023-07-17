@@ -66,6 +66,9 @@ class RawEmbed(utils.Extension):
                 await ctx.send("Could not parse the raw embed.", ephemeral=True)
                 return
 
+            if embeds := embed_dict.get("embeds"):
+                embed_dict = embeds[0]
+
             await ctx.send("Sending...", ephemeral=True)
             await ctx.channel.send(embed=embed_dict)
 
@@ -77,6 +80,9 @@ class RawEmbed(utils.Extension):
             except orjson.JSONDecodeError:
                 await ctx.send("Could not parse the raw embed.", ephemeral=True)
                 return
+
+            if embeds := embed_dict.get("embeds"):
+                embed_dict = embeds[0]
 
             await ctx.send("Editing...", ephemeral=True)
 
