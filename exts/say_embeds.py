@@ -149,8 +149,8 @@ class RawEmbed(utils.Extension):
             if embeds := embed_dict.get("embeds"):
                 embed_dict = embeds[0]
 
-            await ctx.send("Sending...", ephemeral=True)
-            await channel.send(embed=embed_dict)
+            msg = await channel.send(embed=embed_dict)
+            await ctx.send(f"Sent. See it at: {msg.jump_url}", ephemeral=True)
 
         elif ctx.custom_id.startswith("raw-embed-edit"):
             msg_id = int(ctx.custom_id.split("|")[1])
@@ -164,14 +164,12 @@ class RawEmbed(utils.Extension):
             if embeds := embed_dict.get("embeds"):
                 embed_dict = embeds[0]
 
-            await ctx.send("Editing...", ephemeral=True)
-
             message = await ctx.channel.fetch_message(msg_id)
             if message:
                 await message.edit(embed=embed_dict)
+                await ctx.send("Edited.", ephemeral=True)
             else:
                 await ctx.send("Could not get message.", ephemeral=True)
-                return
 
         elif ctx.custom_id.startswith("say-cmd"):
             channel_id = int(ctx.custom_id.split("|")[1])
@@ -180,8 +178,8 @@ class RawEmbed(utils.Extension):
                 await ctx.send("Could not get channel.", ephemeral=True)
                 return
 
-            await ctx.send("Sending...", ephemeral=True)
-            await channel.send(content=ctx.responses["say-content"])
+            msg = await channel.send(content=ctx.responses["say-content"])
+            await ctx.send(f"Sent. See it at: {msg.jump_url}", ephemeral=True)
 
         elif ctx.custom_id.startswith("edit-message"):
             msg_id = int(ctx.custom_id.split("|")[1])
@@ -190,8 +188,8 @@ class RawEmbed(utils.Extension):
                 await ctx.send("Could not get message.", ephemeral=True)
                 return
 
-            await ctx.send("Editing...", ephemeral=True)
             await message.edit(content=ctx.responses["edit-content"])
+            await ctx.send("Edited.", ephemeral=True)
 
 
 def setup(bot):
