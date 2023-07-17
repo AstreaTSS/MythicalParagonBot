@@ -232,7 +232,7 @@ class OwnerCMDs(ipy.Extension):
 
     @debug.subcommand(aliases=["sync-interactions", "sync-cmds", "sync_cmds", "sync"])
     async def sync_interactions(
-        self, ctx: prefixed.PrefixedContext, scope: int = 775912554928144384
+        self, ctx: prefixed.PrefixedContext, scope: int = 1128865913979015239
     ) -> None:
         """
         Synchronizes all interaction commands with Discord.
