@@ -52,7 +52,7 @@ class RawEmbed(utils.Extension):
         ctx: prefixed.PrefixedContext,
         channel: typing.Optional[ipy.GuildText],
         *,
-        content: typing.Optional[str],
+        content: typing.Optional[str] = None,
     ):
         if channel is None:
             channel = ctx.channel  # type: ignore
