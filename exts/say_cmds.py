@@ -3,6 +3,7 @@ import io
 import typing
 
 import aiohttp
+import humanize
 import interactions as ipy
 import orjson
 from interactions.ext import prefixed_commands as prefixed
@@ -51,7 +52,7 @@ class RawEmbed(utils.Extension):
         ctx: prefixed.PrefixedContext,
         channel: typing.Optional[ipy.GuildText],
         *,
-        content: str,
+        content: typing.Optional[str],
     ):
         if channel is None:
             channel = ctx.channel  # type: ignore
@@ -62,14 +63,25 @@ class RawEmbed(utils.Extension):
 
         if ctx.message.attachments:
             for attachment in ctx.message.attachments:
+                if attachment.size > ctx.guild.filesize_limit:
+                    raise ipy.errors.BadArgument(
+                        "Attachments must be less than"
+                        f" {humanize.naturalsize(attachment.size, binary=True)} in"
+                        " size."
+                    )
+
                 async with aiohttp.ClientSession() as session:
                     async with session.get(attachment.url) as resp:
                         if resp.status == 200:
                             data = io.BytesIO(await resp.read())
                             files_to_upload.append(ipy.File(data, attachment.filename))
+        elif not content:
+            raise ipy.errors.BadArgument("You must provide content or files.")
 
         try:
-            await channel.send(content, files=files_to_upload)
+            msg = await channel.send(content, files=files_to_upload)
+            if channel != ctx.channel:
+                await ctx.reply(f"Sent. See it at: {msg.jump_url}")
         finally:
             for ipy_file in files_to_upload:
                 ipy_file.file.close()
