@@ -1,8 +1,11 @@
 import importlib
+import io
 import typing
 
+import aiohttp
 import interactions as ipy
 import orjson
+from interactions.ext import prefixed_commands as prefixed
 
 import common.utils as utils
 
@@ -40,6 +43,36 @@ class RawEmbed(utils.Extension):
             custom_id=f"say-cmd|{channel.id}",
         )
         await ctx.send_modal(modal)
+
+    @prefixed.prefixed_command(name="say")
+    @utils.proper_permissions()
+    async def say_cmd(
+        self,
+        ctx: prefixed.PrefixedContext,
+        channel: typing.Optional[ipy.GuildText],
+        *,
+        content: str,
+    ):
+        if channel is None:
+            channel = ctx.channel  # type: ignore
+            if typing.TYPE_CHECKING:
+                assert channel is not None
+
+        files_to_upload: list[ipy.File] = []
+
+        if ctx.message.attachments:
+            for attachment in ctx.message.attachments:
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(attachment.url) as resp:
+                        if resp.status == 200:
+                            data = io.BytesIO(await resp.read())
+                            files_to_upload.append(ipy.File(data, attachment.filename))
+
+        try:
+            await channel.send(content, files=files_to_upload)
+        finally:
+            for ipy_file in files_to_upload:
+                ipy_file.file.close()
 
     @ipy.slash_command(
         "raw-embed-say",
