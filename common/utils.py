@@ -219,9 +219,12 @@ class Extension(ipy.Extension):
 
 
 class MPBotBase(prefixed.PrefixedInjectedClient):
+    import redis.asyncio as aioredis
+
     if typing.TYPE_CHECKING:
         init_load: bool
         color: ipy.Color
         owner: ipy.User
         guild: ipy.Guild
         fully_ready: asyncio.Event
+        redis: aioredis.Redis

@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 import interactions as ipy
+import redis.asyncio as aioredis
 from dotenv import load_dotenv
 from interactions.ext import prefixed_commands as prefixed
 
@@ -103,6 +104,7 @@ with contextlib.suppress(ImportError):
 
 async def start():
     bot.fully_ready = asyncio.Event()
+    bot.redis = aioredis.from_url(os.environ["REDIS_URL"], decode_responses=True)
 
     ext_list = utils.get_all_extensions(os.environ["DIRECTORY_OF_FILE"])
     for ext in ext_list:

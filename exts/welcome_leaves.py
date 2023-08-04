@@ -9,7 +9,7 @@ class WelcomeLeaves(ipy.Extension):
     def __init__(self, bot: utils.MPBotBase) -> None:
         self.bot: utils.MPBotBase = bot
         self.welcome_chan = ipy.GuildText(
-            self.bot, 1128876234084974703, type=ipy.ChannelType.GUILD_TEXT
+            client=self.bot, id=1128876234084974703, type=ipy.ChannelType.GUILD_TEXT  # type: ignore
         )
 
     @ipy.listen(ipy.events.MemberAdd)
