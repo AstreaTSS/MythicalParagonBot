@@ -174,6 +174,45 @@ class RawEmbed(utils.Extension):
         )
         await ctx.send_modal(modal)
 
+    @prefixed.prefixed_command(name="edit-message")
+    @utils.proper_permissions()
+    async def edit_message_prefixed(
+        self,
+        ctx: prefixed.PrefixedContext,
+        message: ipy.Message,
+        *,
+        content: typing.Optional[str] = None,
+    ):
+        files_to_upload: list[ipy.File] | None = []
+
+        if ctx.message.attachments:
+            for attachment in ctx.message.attachments:
+                if attachment.size > ctx.guild.filesize_limit:
+                    raise ipy.errors.BadArgument(
+                        "Attachments must be less than"
+                        f" {humanize.naturalsize(attachment.size, binary=True)} in"
+                        " size."
+                    )
+
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(attachment.url) as resp:
+                        if resp.status == 200:
+                            data = io.BytesIO(await resp.read())
+                            files_to_upload.append(ipy.File(data, attachment.filename))
+        elif not content:
+            raise ipy.errors.BadArgument("You must provide content or files.")
+        else:
+            files_to_upload = None
+
+        try:
+            msg = await message.edit(content=content, files=files_to_upload)
+            if msg.channel != ctx.channel:
+                await ctx.reply(f"Edited. See it at: {msg.jump_url}")
+        finally:
+            if files_to_upload:
+                for ipy_file in files_to_upload:
+                    ipy_file.file.close()
+
     @ipy.listen(ipy.events.ModalCompletion)  # type: ignore
     async def on_modal_completion(self, event: ipy.events.ModalCompletion):
         ctx = event.ctx
