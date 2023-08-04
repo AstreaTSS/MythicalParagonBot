@@ -293,4 +293,5 @@ class OwnerCMDs(ipy.Extension):
 
 
 def setup(bot) -> None:
+    importlib.reload(utils)
     OwnerCMDs(bot)
