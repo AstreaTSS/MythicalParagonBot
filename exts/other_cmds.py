@@ -100,18 +100,16 @@ class OtherCMDs(utils.Extension):
                     "Made By: [AstreaTSS](https://github.com/AstreaTSS)",
                 )
             ),
-            inline=True,
         )
 
         links = [
-            "Support Server: [Link](https://discord.gg/NSdetwGjpK)",
             "Source Code: [Link](https://github.com/AstreaTSS/MythicalParagonBot)",
+            "Support Server: [Link](https://discord.gg/NSdetwGjpK)",
         ]
 
         about_embed.add_field(
             name="Links:",
             value="\n".join(links),
-            inline=True,
         )
         about_embed.timestamp = ipy.Timestamp.utcnow()
 
