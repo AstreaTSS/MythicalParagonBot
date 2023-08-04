@@ -43,14 +43,21 @@ class FormResponse(ipy.Extension):
         app.add_routes([web.post("/form-response", self.form_response)])
         self.runner = web.AppRunner(app)
         await self.runner.setup()
-        site = web.TCPSite(self.runner, "127.0.0.1", 8000)
+        site = web.TCPSite(self.runner)
         await site.start()
 
     async def form_response(
         self,
         request: web.Request,
     ):
-        resp_json = await request.json(loads=orjson.loads)
+        try:
+            resp_json = await request.json(loads=orjson.loads)
+        except orjson.JSONDecodeError:
+            return web.Response(status=400)
+
+        if not resp_json.get("kinda_secret"):
+            return web.Response(status=404)
+
         if resp_json["kinda_secret"] != os.environ["KINDA_FORMS_SECRET"]:
             return web.Response(status=404)
 
