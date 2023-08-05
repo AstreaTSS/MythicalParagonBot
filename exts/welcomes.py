@@ -35,6 +35,11 @@ class WelcomeLeaves(ipy.Extension):
             msg = await self.welcome_chan.send(event.member.mention, embeds=embed)
             await msg.add_reaction("👋")
 
+    @ipy.listen(ipy.events.MemberUpdate)
+    async def possible_verify(self, event: ipy.events.MemberUpdate) -> None:
+        if event.before.pending and not event.after.pending:
+            await event.after.add_role(1128873570622259371)
+
 
 def setup(bot) -> None:
     importlib.reload(utils)
