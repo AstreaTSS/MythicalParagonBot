@@ -32,7 +32,7 @@ class SelfRoles(utils.Extension):
             max_values=len(self.pronoun_roles),
         )
 
-        self.app_status_roles = {
+        self.app_status_roles: dict[str, tuple[int, str]] = {
             "Applying": (1128886764472377344, "📝"),
             "Undecided": (1128886792746192896, "❓"),
             "Spectating": (1128886813445070970, "👁️"),
@@ -51,7 +51,7 @@ class SelfRoles(utils.Extension):
             max_values=1,
         )
 
-        self.ping_roles = {
+        self.ping_roles: dict[str, tuple[int, str]] = {
             "Announcement Ping": (1128886583421055086, "🗣️"),
             "Teaser Ping": (1128886619085222082, "👁️"),
             "Partner Ping": (1128886651859501106, "🤝"),
@@ -121,7 +121,7 @@ class SelfRoles(utils.Extension):
     async def process_select(
         ctx: ipy.ComponentContext,
         *,
-        roles: dict[str, int],
+        roles: dict[str, int] | dict[str, tuple[int, str]],
         prefix: str,
         add_text: str,
         remove_text: str,
@@ -135,6 +135,11 @@ class SelfRoles(utils.Extension):
         # do this weirdness since doing member.roles has a cache
         # search cost which can be expensive if there are tons of roles
         member_roles = {int(r) for r in member._role_ids}
+
+        role_ids = list(roles.values())
+        if isinstance(role_ids[0], tuple):
+            role_ids = [r[0] for r in role_ids]  # type: ignore
+
         member_roles.difference_update(roles.values())
 
         if ctx.values:
