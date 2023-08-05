@@ -140,7 +140,7 @@ class SelfRoles(utils.Extension):
         if isinstance(role_ids[0], tuple):
             role_ids = [r[0] for r in role_ids]  # type: ignore
 
-        member_roles.difference_update(roles.values())
+        member_roles.difference_update(role_ids)
 
         if ctx.values:
             add_list = []
