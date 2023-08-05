@@ -118,6 +118,58 @@ class SelfRoles(utils.Extension):
         await ctx.send(embed=embed, components=self.ping_roles_select)
         await ctx.message.delete()
 
+    @prefixed.prefixed_command()
+    @utils.proper_permissions()
+    async def edit_pronoun_select(
+        self, ctx: prefixed.PrefixedContext, msg: ipy.Message
+    ):
+        embed = ipy.Embed(
+            title="Pronouns",
+            description=(
+                "Select the pronouns you wish to have. They will appear in your profile"
+                " as a bright green role.\nAny old pronouns not re-selected will be"
+                " removed."
+            ),
+            color=self.bot.color,
+        )
+
+        await msg.edit(embed=embed, components=self.pronoun_select)
+        await ctx.reply("Done!")
+
+    @prefixed.prefixed_command()
+    @utils.proper_permissions()
+    async def edit_app_status_select(
+        self, ctx: prefixed.PrefixedContext, msg: ipy.Message
+    ):
+        embed = ipy.Embed(
+            title="Application Status",
+            description=(
+                "Select your status in terms of applying. They will appear in"
+                " your profile as a blue role."
+            ),
+            color=self.bot.color,
+        )
+
+        await msg.edit(embed=embed, components=self.app_status_select)
+        await ctx.reply("Done!")
+
+    @prefixed.prefixed_command()
+    @utils.proper_permissions()
+    async def edit_ping_roles_select(
+        self, ctx: prefixed.PrefixedContext, msg: ipy.Message
+    ):
+        embed = ipy.Embed(
+            title="Ping Roles",
+            description=(
+                "Select which topics you want to be notified about.\nAny old ping roles"
+                " not re-selected will be removed."
+            ),
+            color=self.bot.color,
+        )
+
+        await msg.edit(embed=embed, components=self.ping_roles_select)
+        await ctx.reply("Done!")
+
     @staticmethod
     async def process_select(
         ctx: ipy.ComponentContext,
