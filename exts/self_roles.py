@@ -53,6 +53,7 @@ class SelfRoles(utils.Extension):
 
         self.ping_roles: dict[str, tuple[int, str]] = {
             "Announcement Ping": (1128886583421055086, "🗣️"),
+            "Minecraft Server Ping": (1137502788335718480, "⛏"),
             "Teaser Ping": (1128886619085222082, "👁️"),
             "Partner Ping": (1128886651859501106, "🤝"),
             "Roleplay Ping": (1128886719354261646, "✍️"),
