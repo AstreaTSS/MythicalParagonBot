@@ -19,9 +19,11 @@ class WelcomeLeaves(ipy.Extension):
                 title=self.bot.guild.name,
                 description=(
                     f"Welcome, {event.member.mention}, to **{self.bot.guild.name}!** Be"
-                    " sure to check out the rules at <#1128873353378275409> and the"
-                    " application at <#1128890650100781148>. Otherwise, feel free to"
-                    " look around!"
+                    " sure to check out the rules at <#1128873353378275409>,"
+                    " information about the KG and its world in"
+                    " <#1137212762779562074>, and the application at"
+                    " <#1128890650100781148>. Otherwise, feel free to take a look"
+                    " around!"
                 ),
                 color=self.bot.color,
                 timestamp=ipy.Timestamp.utcnow(),
