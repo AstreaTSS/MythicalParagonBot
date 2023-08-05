@@ -32,14 +32,8 @@ class WelcomeLeaves(ipy.Extension):
                 "https://cdn.discordapp.com/attachments/1128875291448725534/1130687853643431996/welcomegif.gif"
             )
 
-            await self.welcome_chan.send(event.member.mention, embeds=embed)
-
-    @ipy.listen(ipy.events.MemberRemove)
-    async def member_leave(self, event: ipy.events.MemberRemove) -> None:
-        if event.guild_id == self.bot.guild.id:
-            await self.welcome_chan.send(
-                f"{event.member.mention} ({event.member.tag}) has left the server."
-            )
+            msg = await self.welcome_chan.send(event.member.mention, embeds=embed)
+            await msg.add_reaction("👋")
 
 
 def setup(bot) -> None:
