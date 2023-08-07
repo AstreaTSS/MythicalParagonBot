@@ -217,12 +217,6 @@ class SelfRoles(utils.Extension):
         member_roles.difference_update(role_ids)
 
         if ctx.values:
-            removed_roles_str = ", ".join(
-                f"`{self.bot.guild.get_role(r).name}`" for r in removed_roles
-            )
-            if removed_roles_str:
-                removed_roles_str = f"\nRemoved: {removed_roles_str}"
-
             add_list = []
 
             for value in ctx.values:
@@ -233,6 +227,13 @@ class SelfRoles(utils.Extension):
 
                 member_roles.add(role)
                 add_list.append(f"`{name}`")
+                removed_roles.discard(role)
+
+            removed_roles_str = ", ".join(
+                f"`{self.bot.guild.get_role(r).name}`" for r in removed_roles
+            )
+            if removed_roles_str:
+                removed_roles_str = f"\nRemoved: {removed_roles_str}"
 
             await member.edit(roles=list(member_roles))
             await ctx.send(
