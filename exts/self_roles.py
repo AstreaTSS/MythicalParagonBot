@@ -57,6 +57,7 @@ class SelfRoles(utils.Extension):
             "Teaser Ping": (1128886619085222082, "👁️"),
             "Partner Ping": (1128886651859501106, "🤝"),
             "Roleplay Ping": (1128886719354261646, "✍️"),
+            "OC Poll Ping": (1138101611307212883, "📊")
         }
 
         self.ping_roles_select = ipy.StringSelectMenu(
