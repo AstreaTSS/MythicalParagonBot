@@ -54,31 +54,37 @@ class SelfRoles(utils.Extension):
         self.ping_roles_buttons = [
             ipy.Button(
                 style=ipy.ButtonStyle.GRAY,
+                label="Announcement Ping",
                 emoji="🗣️",
                 custom_id="mprolebutton|1128886583421055086",
             ),
             ipy.Button(
                 style=ipy.ButtonStyle.GRAY,
+                label="Minecraft Server Ping",
                 emoji="⛏",
                 custom_id="mprolebutton|1137502788335718480",
             ),
             ipy.Button(
                 style=ipy.ButtonStyle.GRAY,
+                label="Teaser Ping",
                 emoji="👁️",
                 custom_id="mprolebutton|1128886619085222082",
             ),
             ipy.Button(
                 style=ipy.ButtonStyle.GRAY,
+                label="Partner Ping",
                 emoji="🤝",
                 custom_id="mprolebutton|1128886651859501106",
             ),
             ipy.Button(
                 style=ipy.ButtonStyle.GRAY,
+                label="Roleplay Ping",
                 emoji="✍️",
                 custom_id="mprolebutton|1128886719354261646",
             ),
             ipy.Button(
                 style=ipy.ButtonStyle.GRAY,
+                label="OC Poll Ping",
                 emoji="📊",
                 custom_id="mprolebutton|1138101611307212883",
             ),
@@ -118,17 +124,9 @@ class SelfRoles(utils.Extension):
     @prefixed.prefixed_command()
     @utils.proper_permissions()
     async def send_ping_roles_select(self, ctx: prefixed.PrefixedContext):
-        button_list = "\n".join(
-            f"{b.emoji} - <@&{b.custom_id.removeprefix('mprolebutton|')}>"
-            for b in self.ping_roles_buttons
-        )
-
         embed = ipy.Embed(
             title="Ping Roles",
-            description=(
-                "Select which topics you want to be notified about.\n\nThe roles are"
-                f" as follows:\n{button_list}"
-            ),
+            description="Select which topics you want to be notified about.",
             color=self.bot.color,
         )
 
@@ -177,17 +175,9 @@ class SelfRoles(utils.Extension):
     async def edit_ping_roles_select(
         self, ctx: prefixed.PrefixedContext, msg: ipy.Message
     ):
-        button_list = "\n".join(
-            f"{b.emoji} - <@&{b.custom_id.removeprefix('mprolebutton|')}>"
-            for b in self.ping_roles_buttons
-        )
-
         embed = ipy.Embed(
             title="Ping Roles",
-            description=(
-                "Select which topics you want to be notified about.\n\nThe roles are"
-                f" as follows:\n{button_list}"
-            ),
+            description="Select which topics you want to be notified about.",
             color=self.bot.color,
         )
 
