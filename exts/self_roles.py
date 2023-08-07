@@ -279,7 +279,7 @@ class SelfRoles(utils.Extension):
                 await ctx.send("An error occured. Please try again.", ephemeral=True)
                 return
 
-            role_id = int(ctx.custom_id.removeprefix("rolebutton|"))
+            role_id = int(ctx.custom_id.removeprefix("mprolebutton|"))
             role = await self.bot.guild.fetch_role(role_id)
             if not role:
                 await ctx.send("An error occured. Please try again.", ephemeral=True)
