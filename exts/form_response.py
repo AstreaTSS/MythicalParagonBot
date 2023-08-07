@@ -40,10 +40,10 @@ class FormResponse(ipy.Extension):
         self.staff_chat = await self.bot.fetch_channel(1128874166699962368)  # type: ignore
 
         app = web.Application()
-        app.add_routes([web.post("/form-response", self.form_response)])
+        app.add_routes([web.post("/mp-form-response", self.form_response)])
         self.runner = web.AppRunner(app)
         await self.runner.setup()
-        site = web.TCPSite(self.runner, port=int(os.getenv("PORT", default="5000")))
+        site = web.TCPSite(self.runner, port=8000)
         await site.start()
 
     async def form_response(

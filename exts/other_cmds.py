@@ -16,6 +16,19 @@ class OtherCMDs(utils.Extension):
         self.name = "General"
         self.bot: utils.MPBotBase = bot
 
+    def _get_commit_hash(self):
+        try:
+            return (
+                subprocess.check_output(["git", "rev-parse", "--short", "HEAD"])
+                .decode("ascii")
+                .strip()
+            )
+        except subprocess.CalledProcessError:
+            return "359beb"
+
+    async def get_commit_hash(self):
+        return await asyncio.to_thread(self._get_commit_hash)
+
     @ipy.slash_command(
         "ping",
         description=(
@@ -61,6 +74,7 @@ class OtherCMDs(utils.Extension):
             else self.bot.user.display_avatar.url
         )
 
+        commit_hash = await self.get_commit_hash()
         command_num = len(self.bot.application_commands) + len(
             self.bot.prefixed.commands
         )
@@ -74,6 +88,10 @@ class OtherCMDs(utils.Extension):
                     (
                         "Startup Time:"
                         f" {ipy.Timestamp.fromdatetime(self.bot.start_time).format(ipy.TimestampStyles.RelativeTime)}"
+                    ),
+                    (
+                        "Commit Hash:"
+                        f" [{commit_hash}](https://github.com/AstreaTSS/MythicalParagonBot/commit/{commit_hash})"
                     ),
                     (
                         "Interactions.py Version:"
