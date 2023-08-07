@@ -51,44 +51,38 @@ class SelfRoles(utils.Extension):
             max_values=1,
         )
 
-        self.ping_roles_buttons = [
-            ipy.Button(
-                style=ipy.ButtonStyle.GRAY,
-                label="Announcement Ping",
-                emoji="🗣️",
-                custom_id="mprolebutton|1128886583421055086",
+        self.ping_roles: dict[str, tuple[int, str, str | None]] = {
+            "Announcement Ping": (1128886583421055086, "🗣️", None),
+            "Minecraft Server Ping": (1137502788335718480, "⛏", None),
+            "Teaser Ping": (1128886619085222082, "👁️", None),
+            "Partner Ping": (1128886651859501106, "🤝", None),
+            "Roleplay Ping": (
+                1128886719354261646,
+                "✍️",
+                "Note: will be pinged frequently during the RP.",
             ),
-            ipy.Button(
-                style=ipy.ButtonStyle.GRAY,
-                label="Minecraft Server Ping",
-                emoji="⛏",
-                custom_id="mprolebutton|1137502788335718480",
+            "OC Poll Ping": (
+                1138101611307212883,
+                "📊",
+                "Note: will be pinged frequently during applications.",
             ),
-            ipy.Button(
-                style=ipy.ButtonStyle.GRAY,
-                label="Teaser Ping",
-                emoji="👁️",
-                custom_id="mprolebutton|1128886619085222082",
+        }
+
+        self.ping_roles_select = ipy.StringSelectMenu(
+            *(
+                ipy.StringSelectOption(
+                    label=k,
+                    value=f"mppingroles:{v[0]}|{k}",
+                    emoji=v[1],
+                    description=v[2],
+                )
+                for k, v in self.ping_roles.items()
             ),
-            ipy.Button(
-                style=ipy.ButtonStyle.GRAY,
-                label="Partner Ping",
-                emoji="🤝",
-                custom_id="mprolebutton|1128886651859501106",
-            ),
-            ipy.Button(
-                style=ipy.ButtonStyle.GRAY,
-                label="Roleplay Ping",
-                emoji="✍️",
-                custom_id="mprolebutton|1128886719354261646",
-            ),
-            ipy.Button(
-                style=ipy.ButtonStyle.GRAY,
-                label="OC Poll Ping",
-                emoji="📊",
-                custom_id="mprolebutton|1138101611307212883",
-            ),
-        ]
+            custom_id="mppingrolesselect",
+            placeholder="Select your ping roles!",
+            min_values=0,
+            max_values=len(self.ping_roles),
+        )
 
     @prefixed.prefixed_command()
     @utils.proper_permissions()
@@ -97,8 +91,8 @@ class SelfRoles(utils.Extension):
             title="Pronouns",
             description=(
                 "Select the pronouns you wish to have. They will appear in your profile"
-                " as a bright green role.\nAny old pronouns not re-selected will be"
-                " removed."
+                " as a bright green role.\n*Any old pronouns not re-selected will be"
+                " removed.*"
             ),
             color=self.bot.color,
         )
@@ -126,12 +120,16 @@ class SelfRoles(utils.Extension):
     async def send_ping_roles_select(self, ctx: prefixed.PrefixedContext):
         embed = ipy.Embed(
             title="Ping Roles",
-            description="Select which topics you want to be notified about.",
+            description=(
+                "Select which topics you want to be notified about.\n*Any old ping"
+                " roles not re-selected will be removed.*"
+            ),
             color=self.bot.color,
         )
 
         await ctx.send(
-            embed=embed, components=ipy.spread_to_rows(*self.ping_roles_buttons)
+            embed=embed,
+            components=self.ping_roles_select,
         )
         await ctx.message.delete()
 
@@ -144,8 +142,8 @@ class SelfRoles(utils.Extension):
             title="Pronouns",
             description=(
                 "Select the pronouns you wish to have. They will appear in your profile"
-                " as a bright green role.\nAny old pronouns not re-selected will be"
-                " removed."
+                " as a bright green role.\n*Any old pronouns not re-selected will be"
+                " removed.*"
             ),
             color=self.bot.color,
         )
@@ -177,12 +175,16 @@ class SelfRoles(utils.Extension):
     ):
         embed = ipy.Embed(
             title="Ping Roles",
-            description="Select which topics you want to be notified about.",
+            description=(
+                "Select which topics you want to be notified about.\n*Any old ping"
+                " roles not re-selected will be removed.*"
+            ),
             color=self.bot.color,
         )
 
         await msg.edit(
-            embed=embed, components=ipy.spread_to_rows(*self.ping_roles_buttons)
+            embed=embed,
+            components=self.ping_roles_select,
         )
         await ctx.reply("Done!")
 
@@ -190,7 +192,9 @@ class SelfRoles(utils.Extension):
         self,
         ctx: ipy.ComponentContext,
         *,
-        roles: dict[str, int] | dict[str, tuple[int, str]],
+        roles: dict[str, int]
+        | dict[str, tuple[int, str]]
+        | dict[str, tuple[int, str, str | None]],
         prefix: str,
         add_text: str,
         remove_text: str,
@@ -259,6 +263,14 @@ class SelfRoles(utils.Extension):
                 prefix="mpappstatus",
                 add_text="status",
                 remove_text="Status",
+            )
+        elif ctx.custom_id == "mppingrolesselect":
+            await self.process_select(
+                ctx,
+                roles=self.ping_roles,
+                prefix="mppingroles",
+                add_text="ping roles",
+                remove_text="Ping roles",
             )
 
     @ipy.listen(ipy.events.ButtonPressed)
