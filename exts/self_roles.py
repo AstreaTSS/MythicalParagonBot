@@ -196,8 +196,8 @@ class SelfRoles(utils.Extension):
         )
         await ctx.reply("Done!")
 
-    @staticmethod
     async def process_select(
+        self,
         ctx: ipy.ComponentContext,
         *,
         roles: dict[str, int] | dict[str, tuple[int, str]],
@@ -219,9 +219,14 @@ class SelfRoles(utils.Extension):
         if isinstance(role_ids[0], tuple):
             role_ids = [r[0] for r in role_ids]  # type: ignore
 
+        removed_roles = member_roles.intersection(role_ids)
         member_roles.difference_update(role_ids)
 
         if ctx.values:
+            removed_roles_str = ", ".join(
+                f"`{self.bot.guild.get_role(r).name}`" for r in removed_roles
+            )
+
             add_list = []
 
             for value in ctx.values:
@@ -234,7 +239,10 @@ class SelfRoles(utils.Extension):
                 add_list.append(f"`{name}`")
 
             await member.edit(roles=list(member_roles))
-            await ctx.send(f"New {add_text}: {', '.join(add_list)}.", ephemeral=True)
+            await ctx.send(
+                f"New {add_text}: {', '.join(add_list)}.\nRemoved: {removed_roles_str}",
+                ephemeral=True,
+            )
 
         else:
             await member.edit(roles=list(member_roles))
