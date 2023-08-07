@@ -12,12 +12,12 @@ class SelfRoles(utils.Extension):
         self.name = "Self-Role"
 
         self.pronoun_roles = {
-            "She/her": 1128884050858356836,
-            "He/him": 1128884230001266718,
-            "It/its": 1128884265602519112,
-            "They/them": 1128884300297805905,
+            "She/Her": 1128884050858356836,
+            "He/Him": 1128884230001266718,
+            "It/Its": 1128884265602519112,
+            "They/Them": 1128884300297805905,
             "Neopronouns": 1128884328286396527,
-            "Any Prnouns": 1128884365720567888,
+            "Any Pronouns": 1128884365720567888,
             "Ask for Pronouns": 1128884400218718288,
         }
 
@@ -267,14 +267,6 @@ class SelfRoles(utils.Extension):
                 prefix="mpappstatus",
                 add_text="status",
                 remove_text="Status",
-            )
-        elif ctx.custom_id == "mppingrolesselect":
-            await self.process_select(
-                ctx,
-                roles=self.ping_roles,
-                prefix="mppingroles",
-                add_text="ping roles",
-                remove_text="Ping roles",
             )
 
     @ipy.listen(ipy.events.ButtonPressed)
