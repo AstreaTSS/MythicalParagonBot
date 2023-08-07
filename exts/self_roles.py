@@ -226,6 +226,8 @@ class SelfRoles(utils.Extension):
             removed_roles_str = ", ".join(
                 f"`{self.bot.guild.get_role(r).name}`" for r in removed_roles
             )
+            if removed_roles_str:
+                removed_roles_str = f"\nRemoved: {removed_roles_str}"
 
             add_list = []
 
@@ -240,7 +242,7 @@ class SelfRoles(utils.Extension):
 
             await member.edit(roles=list(member_roles))
             await ctx.send(
-                f"New {add_text}: {', '.join(add_list)}.\nRemoved: {removed_roles_str}",
+                f"New {add_text}: {', '.join(add_list)}.{removed_roles_str}",
                 ephemeral=True,
             )
 
