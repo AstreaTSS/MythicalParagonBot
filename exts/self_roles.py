@@ -133,7 +133,7 @@ class SelfRoles(utils.Extension):
         )
 
         await ctx.send(
-            embed=embed, components=ipy.spread_to_rows(self.ping_roles_buttons)
+            embed=embed, components=ipy.spread_to_rows(*self.ping_roles_buttons)
         )
         await ctx.message.delete()
 
@@ -192,7 +192,7 @@ class SelfRoles(utils.Extension):
         )
 
         await msg.edit(
-            embed=embed, components=ipy.spread_to_rows(self.ping_roles_buttons)
+            embed=embed, components=ipy.spread_to_rows(*self.ping_roles_buttons)
         )
         await ctx.reply("Done!")
 
