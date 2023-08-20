@@ -115,6 +115,26 @@ class OtherCMDs(utils.Extension):
 
         await ctx.send(embed=about_embed)
 
+    @ipy.listen(ipy.events.ThreadCreate)
+    async def oc_poll_create(self, event: ipy.events.ThreadCreate):
+        if int(event.thread.parent_id) != 1137074505555132416:
+            return
+
+        thread_id = event.thread.id
+
+        try:
+            await self.bot.wait_for(
+                ipy.events.MessageCreate,
+                checks=lambda event: "<@&1138101611307212883>" in event.message.content
+                and int(event.message._channel_id) == thread_id,
+                timeout=300,
+            )
+            return
+        except asyncio.TimeoutError:
+            await event.thread.send(
+                "<@&1138101611307212883>", allowed_mentions=ipy.AllowedMentions.all()
+            )
+
 
 def setup(bot):
     importlib.reload(utils)
