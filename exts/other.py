@@ -120,7 +120,7 @@ class OtherCMDs(utils.Extension):
         if int(event.thread.parent_id) != 1137074505555132416:
             return
 
-        thread_id = event.thread.id
+        thread_id = int(event.thread.id)
 
         try:
             await self.bot.wait_for(
