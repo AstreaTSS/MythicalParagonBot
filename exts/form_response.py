@@ -162,7 +162,7 @@ class FormResponse(ipy.Extension):
         )
         embed.add_field("Submitted User", username, inline=True)
         embed.add_field(
-            "Submitted Form (As Pre-Filled Template)",
+            "Submitted Form",
             f"[Link]({form_data.url})",
             inline=True,
         )
