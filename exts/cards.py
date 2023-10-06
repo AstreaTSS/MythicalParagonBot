@@ -140,7 +140,10 @@ class Cards(utils.Extension):
         self.bot: utils.MPBotBase = bot
         self.card_channel = ipy.GuildText(client=self.bot, id=1129636634590195793, type=ipy.ChannelType.GUILD_TEXT)  # type: ignore
 
-    @ipy.slash_command(name="update-card-channel")
+    @ipy.slash_command(
+        name="update-card-channel",
+        default_member_permissions=ipy.Permissions.MANAGE_GUILD,
+    )
     async def update_card_channel(self, ctx: ipy.SlashContext):
         await ctx.defer()
 
@@ -185,7 +188,9 @@ class Cards(utils.Extension):
 
         await ctx.send("Updated the card channel!")
 
-    @tansy.slash_command(name="create-card")
+    @tansy.slash_command(
+        name="create-card", default_member_permissions=ipy.Permissions.MANAGE_GUILD
+    )
     async def create_card(
         self,
         ctx: ipy.SlashContext,
@@ -211,7 +216,9 @@ class Cards(utils.Extension):
             allowed_mentions=ipy.AllowedMentions.none(),
         )
 
-    @tansy.slash_command(name="edit-card")
+    @tansy.slash_command(
+        name="edit-card", default_member_permissions=ipy.Permissions.MANAGE_GUILD
+    )
     async def edit_card(
         self,
         ctx: ipy.SlashContext,
