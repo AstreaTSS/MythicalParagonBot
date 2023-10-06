@@ -21,7 +21,9 @@ CARD_VALIDATE_REGEX = re.compile(
 NAME_REGEX = re.compile(r"\*\*Name\*\*: (?P<name>[^\n]+)")
 TALENT_REGEX = re.compile(r"\*\*Talent\*\*: (?P<talent>[^\n]+)")
 AGE_REGEX = re.compile(r"\*\*Age\*\*: (?P<age>[^\n]+)")
+WEIGHT_SEARCH_REGEX = re.compile(r"\*\*Weight\*\*: (?P<weight>[^\n]+)")
 WEIGHT_REGEX = re.compile(r"\*\*Weight\*\*: (?P<weight>[^\n]+).*")
+HEIGHT_SEARCH_REGEX = re.compile(r"\*\*Height\*\*: (?P<height>[^\n]+)")
 HEIGHT_REGEX = re.compile(r"\*\*Height\*\*: (?P<height>[^\n]+).*")
 PRONOUNS_REGEX = re.compile(r"\*\*Pronouns\*\*: (?P<pronouns>[^\n]+)")
 LIKES_REGEX = re.compile(r"\*\*Likes\*\*: (?P<likes>[^\n]+)")
@@ -260,6 +262,9 @@ class Cards(utils.Extension):
         if a_match := NAME_REGEX.search(ctx.message.content):
             name = a_match.group("name")
 
+        if name == "N/A":
+            name = ipy.MISSING
+
         await ctx.send_modal(
             ipy.Modal(
                 ipy.ShortText(label="Name:", custom_id="name", value=name),
@@ -273,6 +278,9 @@ class Cards(utils.Extension):
         talent = ipy.MISSING
         if a_match := TALENT_REGEX.search(ctx.message.content):
             talent = a_match.group("talent")
+
+        if talent == "N/A":
+            talent = ipy.MISSING
 
         await ctx.send_modal(
             ipy.Modal(
@@ -288,6 +296,9 @@ class Cards(utils.Extension):
         if a_match := AGE_REGEX.search(ctx.message.content):
             age = a_match.group("age")
 
+        if age == "N/A":
+            age = ipy.MISSING
+
         await ctx.send_modal(
             ipy.Modal(
                 ipy.ShortText(label="Age:", custom_id="age", value=age),
@@ -299,8 +310,11 @@ class Cards(utils.Extension):
     @ipy.component_callback("card-edit-weight")
     async def card_edit_weight_button(self, ctx: ipy.ComponentContext):
         weight = ipy.MISSING
-        if a_match := WEIGHT_REGEX.search(ctx.message.content):
+        if a_match := WEIGHT_SEARCH_REGEX.search(ctx.message.content):
             weight = a_match.group("weight")
+
+        if weight == "N/A":
+            weight = ipy.MISSING
 
         await ctx.send_modal(
             ipy.Modal(
@@ -318,8 +332,11 @@ class Cards(utils.Extension):
     @ipy.component_callback("card-edit-height")
     async def card_edit_height_button(self, ctx: ipy.ComponentContext):
         height = ipy.MISSING
-        if a_match := HEIGHT_REGEX.search(ctx.message.content):
+        if a_match := HEIGHT_SEARCH_REGEX.search(ctx.message.content):
             height = a_match.group("height")
+
+        if height == "N/A":
+            height = ipy.MISSING
 
         await ctx.send_modal(
             ipy.Modal(
@@ -340,6 +357,9 @@ class Cards(utils.Extension):
         if a_match := PRONOUNS_REGEX.search(ctx.message.content):
             pronouns = a_match.group("pronouns")
 
+        if pronouns == "N/A":
+            pronouns = ipy.MISSING
+
         await ctx.send_modal(
             ipy.Modal(
                 ipy.ShortText(label="Pronouns:", custom_id="pronouns", value=pronouns),
@@ -353,6 +373,9 @@ class Cards(utils.Extension):
         likes = ipy.MISSING
         if a_match := LIKES_REGEX.search(ctx.message.content):
             likes = a_match.group("likes")
+
+        if likes == "N/A":
+            likes = ipy.MISSING
 
         await ctx.send_modal(
             ipy.Modal(
@@ -368,6 +391,9 @@ class Cards(utils.Extension):
         if a_match := DISLIKES_REGEX.search(ctx.message.content):
             dislikes = a_match.group("dislikes")
 
+        if dislikes == "N/A":
+            dislikes = ipy.MISSING
+
         await ctx.send_modal(
             ipy.Modal(
                 ipy.ShortText(label="Dislikes:", custom_id="dislikes", value=dislikes),
@@ -382,6 +408,9 @@ class Cards(utils.Extension):
         if a_match := FEARS_REGEX.search(ctx.message.content):
             fears = a_match.group("fears")
 
+        if fears == "N/A":
+            fears = ipy.MISSING
+
         await ctx.send_modal(
             ipy.Modal(
                 ipy.ShortText(label="Fears:", custom_id="fears", value=fears),
@@ -395,6 +424,9 @@ class Cards(utils.Extension):
         image_url = ipy.MISSING
         if a_match := IMAGE_URL_REGEX.search(ctx.message.content):
             image_url = a_match.group("image_url")
+
+        if image_url == "N/A":
+            image_url = ipy.MISSING
 
         await ctx.send_modal(
             ipy.Modal(
@@ -540,6 +572,7 @@ class Cards(utils.Extension):
                     "type": 1,
                 },
             )
+
             await ctx.send("Added!", ephemeral=True)
         else:
             await models.CharacterCard.prisma().update_many(
@@ -559,6 +592,8 @@ class Cards(utils.Extension):
             )
 
             await ctx.send("Updated!", ephemeral=True)
+
+        await ctx.message.delete()
 
 
 def setup(bot: utils.MPBotBase) -> None:
