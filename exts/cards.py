@@ -201,6 +201,11 @@ class Cards(utils.Extension):
         ctx: ipy.SlashContext,
         user: ipy.Member = tansy.Option("The user who created the OC."),
     ):
+        if await models.CharacterCard.prisma().count(
+            where={"user_id": user.id, "type": 1}
+        ):
+            raise ipy.errors.BadArgument("That user already has a card.")
+
         content_builder: list[str] = [
             "**Name**: N/A",
             "**Talent**: N/A",
