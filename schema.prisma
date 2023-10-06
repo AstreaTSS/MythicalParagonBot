@@ -14,7 +14,7 @@ model CharacterCard {
   oc_name   String  @unique
   user_id   BigInt
   talent    String
-  age       Int
+  age       String
   weight    Int  // in lbs
   height    Int  // in inches
   pronouns  String

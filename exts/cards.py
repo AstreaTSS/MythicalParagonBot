@@ -11,7 +11,7 @@ import common.utils as utils
 
 CARD_VALIDATE_REGEX = re.compile(
     r"\*\*Name\*\*: (?P<name>[^\n]+)\n\*\*Talent\*\*:"
-    r" (?P<talent>[^\n]+)\n\n\*\*Age\*\*: (?P<age>\d+)\n\*\*Weight\*\*:"
+    r" (?P<talent>[^\n]+)\n\n\*\*Age\*\*: (?P<age>\S+)\n\*\*Weight\*\*:"
     r" (?P<weight>\d+).*\n\*\*Height\*\*: (?P<height>\d+).*\n\*\*Pronouns\*\*:"
     r" (?P<pronouns>[^\n]+)\n\n\*\*Likes\*\*: (?P<likes>[^\n]+)\n\*\*Dislikes\*\*:"
     r" (?P<dislikes>[^\n]+)\n\*\*Fears\*\*: (?P<fears>[^\n]+)\n\*\*OC By\*\*:"
@@ -20,7 +20,7 @@ CARD_VALIDATE_REGEX = re.compile(
 
 NAME_REGEX = re.compile(r"\*\*Name\*\*: (?P<name>[^\n]+)")
 TALENT_REGEX = re.compile(r"\*\*Talent\*\*: (?P<talent>[^\n]+)")
-AGE_REGEX = re.compile(r"\*\*Age\*\*: (?P<age>[^\n]+)")
+AGE_REGEX = re.compile(r"\*\*Age\*\*: (?P<age>\S+)")
 WEIGHT_SEARCH_REGEX = re.compile(r"\*\*Weight\*\*: (?P<weight>\d+)")
 WEIGHT_REGEX = re.compile(r"\*\*Weight\*\*: (?P<weight>[^\n]+)")
 HEIGHT_SEARCH_REGEX = re.compile(r"\*\*Height\*\*: (?P<height>\d+)")
@@ -531,7 +531,7 @@ class Cards(utils.Extension):
 
         name = a_match.group("name")
         talent = a_match.group("talent")
-        age = int(a_match.group("age"))
+        age = a_match.group("age")
         weight = int(a_match.group("weight"))
         height = int(a_match.group("height"))
         pronouns = a_match.group("pronouns")
@@ -544,6 +544,7 @@ class Cards(utils.Extension):
         if "N/A" in (
             name,
             talent,
+            age,
             pronouns,
             likes,
             dislikes,
