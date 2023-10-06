@@ -51,9 +51,12 @@ def to_cm(inches: int) -> int:
 
 async def card_embed(bot: utils.MPBotBase, card: models.CharacterCard):
     user = await bot.cache.fetch_user(card.user_id)
-    embed = ipy.Embed(
-        title=f"{card.oc_name}, the Ultimate {card.talent}", color=bot.color
-    )
+    embed = ipy.Embed(color=bot.color)
+
+    if card.talent:
+        embed.title = f"{card.oc_name}, the Ultimate {card.talent}"
+    else:
+        embed.title = card.oc_name
 
     string_builder: list[str] = [
         "**Basic Information**",
@@ -550,6 +553,9 @@ class Cards(utils.Extension):
             image_url,
         ):
             return await ctx.send("One or more fields is missing.", ephemeral=True)
+
+        if talent == "None":
+            talent = None
 
         if not await models.CharacterCard.prisma().count(
             where={"user_id": oc_by, "type": 1}

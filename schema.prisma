@@ -13,7 +13,7 @@ model CharacterCard {
   type      Int  // 1 - participant, 2 - host
   oc_name   String  @unique
   user_id   BigInt
-  talent    String
+  talent    String?
   age       String
   weight    Int  // in lbs
   height    Int  // in inches
