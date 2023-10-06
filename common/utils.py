@@ -219,9 +219,11 @@ class Extension(ipy.Extension):
 
 
 class MPBotBase(prefixed.PrefixedInjectedClient):
-    import redis.asyncio as aioredis
-
     if typing.TYPE_CHECKING:
+        from prisma import Prisma
+        import redis.asyncio as aioredis
+
+        db: Prisma
         init_load: bool
         color: ipy.Color
         owner: ipy.User

@@ -9,6 +9,7 @@ import interactions as ipy
 import redis.asyncio as aioredis
 from dotenv import load_dotenv
 from interactions.ext import prefixed_commands as prefixed
+from prisma import Prisma
 
 import common.utils as utils
 
@@ -75,6 +76,7 @@ class MPBot(utils.MPBotBase):
         await utils.error_handle(self, error)
 
     async def stop(self) -> None:
+        await self.db.disconnect()
         return await super().stop()
 
 
@@ -103,6 +105,9 @@ with contextlib.suppress(ImportError):
 
 
 async def start():
+    bot.db = Prisma(auto_register=True)
+    await bot.db.connect()
+
     bot.fully_ready = asyncio.Event()
     bot.redis = aioredis.from_url(os.environ["REDIS_URL"], decode_responses=True)
 

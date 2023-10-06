@@ -1,0 +1,25 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider             = "prisma-client-py"
+  recursive_type_depth = -1
+}
+
+model CharacterCard {
+  id        Int     @id @default(autoincrement())
+  type      Int  // 1 - participant, 2 - host
+  oc_name   String  @unique
+  user_id   BigInt
+  talent    String
+  age       Int
+  weight    Int  // in lbs
+  height    Int  // in inches
+  pronouns  String
+  likes     String
+  dislikes  String
+  fears     String
+  image_url String
+}
