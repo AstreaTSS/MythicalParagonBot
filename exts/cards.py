@@ -463,9 +463,6 @@ class Cards(utils.Extension):
                 f"**Talent**: {ctx.responses['talent']}", message.content
             )
         elif ctx.custom_id.startswith("card-edit-age"):
-            if not ctx.responses["age"].isdigit():
-                return await ctx.send("Age must be a number.", ephemeral=True)
-
             new_content = AGE_REGEX.sub(
                 f"**Age**: {ctx.responses['age']}", message.content
             )
