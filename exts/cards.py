@@ -88,7 +88,7 @@ async def card_embed(bot: utils.MPBotBase, card: models.CharacterCard):
 
     embed.description = "\n".join(string_builder)
     embed.set_image(url=card.image_url)
-    embed.set_footer(f"Status: {card.status.name.lower()}")
+    embed.set_footer(f"Status: {card.status.lower()}")
     return embed
 
 
@@ -260,7 +260,7 @@ class Cards(utils.Extension):
         content_builder: list[str] = [
             f"**Name**: {card.oc_name}",
             f"**Talent**: {card.talent}",
-            f"**Status**: {card.status.name.capitalize()}\n**Age**: {card.age}",
+            f"**Status**: {card.status.capitalize()}\n**Age**: {card.age}",
             f"**Weight**: {card.weight} lbs ({to_kg(card.weight)} kg)",
             (
                 f"**Height**: {card.height} in ({inches_display(card.height)},"
