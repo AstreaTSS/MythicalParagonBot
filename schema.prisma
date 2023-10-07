@@ -11,6 +11,7 @@ generator client {
 model CharacterCard {
   id        Int     @id @default(autoincrement())
   type      Int  // 1 - participant, 2 - host
+  status    Status  @default(ALIVE)
   oc_name   String  @unique
   user_id   BigInt
   talent    String?
@@ -22,4 +23,10 @@ model CharacterCard {
   dislikes  String
   fears     String
   image_url String
+}
+
+enum Status {
+  ALIVE
+  DEAD
+  MISSING
 }

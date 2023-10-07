@@ -5,13 +5,15 @@ import time
 import interactions as ipy
 import tansy
 from prisma import models
+from prisma.enums import Status
 
 import common.utils as utils
 
 
 CARD_VALIDATE_REGEX = re.compile(
     r"\*\*Name\*\*: (?P<name>[^\n]+)\n\*\*Talent\*\*:"
-    r" (?P<talent>[^\n]+)\n\n\*\*Age\*\*: (?P<age>\S+)\n\*\*Weight\*\*:"
+    r" (?P<talent>[^\n]+)\n\*\*Status\*\*: (?P<status>\S+)\n\n\*\*Age\*\*:"
+    r" (?P<age>\S+)\n\*\*Weight\*\*:"
     r" (?P<weight>\d+).*\n\*\*Height\*\*: (?P<height>\d+).*\n\*\*Pronouns\*\*:"
     r" (?P<pronouns>[^\n]+)\n\n\*\*Likes\*\*: (?P<likes>[^\n]+)\n\*\*Dislikes\*\*:"
     r" (?P<dislikes>[^\n]+)\n\*\*Fears\*\*: (?P<fears>[^\n]+)\n\*\*OC By\*\*:"
@@ -19,6 +21,7 @@ CARD_VALIDATE_REGEX = re.compile(
 )
 
 NAME_REGEX = re.compile(r"\*\*Name\*\*: (?P<name>[^\n]+)")
+STATUS_REGEX = re.compile(r"\*\*Status\*\*: (?P<status>\S+)")
 TALENT_REGEX = re.compile(r"\*\*Talent\*\*: (?P<talent>[^\n]+)")
 AGE_REGEX = re.compile(r"\*\*Age\*\*: (?P<age>\S+)")
 WEIGHT_SEARCH_REGEX = re.compile(r"\*\*Weight\*\*: (?P<weight>\d+)")
@@ -49,9 +52,16 @@ def to_cm(inches: int) -> int:
     return round(inches * 2.54)
 
 
+STATUS_COLOR: dict[Status, ipy.Color] = {
+    Status.ALIVE: ipy.Color("#573ae5"),
+    Status.DEAD: ipy.RoleColors.RED,
+    Status.MISSING: ipy.RoleColors.LIGHT_GRAY,
+}
+
+
 async def card_embed(bot: utils.MPBotBase, card: models.CharacterCard):
     user = await bot.cache.fetch_user(card.user_id)
-    embed = ipy.Embed(color=bot.color)
+    embed = ipy.Embed(color=STATUS_COLOR[card.status])
 
     if card.talent:
         embed.title = f"{card.oc_name}, the Ultimate {card.talent}"
@@ -78,6 +88,7 @@ async def card_embed(bot: utils.MPBotBase, card: models.CharacterCard):
 
     embed.description = "\n".join(string_builder)
     embed.set_image(url=card.image_url)
+    embed.set_footer(f"Status: {card.status.name.lower()}")
     return embed
 
 
@@ -91,6 +102,11 @@ CARD_BUTTONS = ipy.spread_to_rows(
         style=ipy.ButtonStyle.BLUE,
         label="Edit Talent",
         custom_id="card-edit-talent",
+    ),
+    ipy.Button(
+        style=ipy.ButtonStyle.BLUE,
+        label="Edit Status",
+        custom_id="card-edit-status",
     ),
     ipy.Button(
         style=ipy.ButtonStyle.BLUE,
@@ -209,7 +225,7 @@ class Cards(utils.Extension):
         content_builder: list[str] = [
             "**Name**: N/A",
             "**Talent**: N/A",
-            "\n**Age**: N/A",
+            "**Status**: Alive\n**Age**: N/A",
             "**Weight**: N/A lbs (N/A kg)",
             "**Height**: N/A in (N/A cm)",
             "**Pronouns**: N/A",
@@ -244,7 +260,7 @@ class Cards(utils.Extension):
         content_builder: list[str] = [
             f"**Name**: {card.oc_name}",
             f"**Talent**: {card.talent}",
-            f"\n**Age**: {card.age}",
+            f"**Status**: {card.status.name.capitalize()}\n**Age**: {card.age}",
             f"**Weight**: {card.weight} lbs ({to_kg(card.weight)} kg)",
             (
                 f"**Height**: {card.height} in ({inches_display(card.height)},"
@@ -295,6 +311,22 @@ class Cards(utils.Extension):
                 ipy.ShortText(label="Talent:", custom_id="talent", value=talent),
                 title="Edit Talent",
                 custom_id=f"card-edit-talent|{ctx.message_id}",
+            ),
+        )
+
+    @ipy.component_callback("card-edit-status")
+    async def card_edit_status_button(self, ctx: ipy.ComponentContext):
+        a_match = STATUS_REGEX.search(ctx.message.content)
+        if not a_match:
+            return await ctx.send("Could not parse the status.", ephemeral=True)
+
+        status = a_match.group("status")
+
+        await ctx.send_modal(
+            ipy.Modal(
+                ipy.ShortText(label="Status:", custom_id="status", value=status),
+                title="Edit Status",
+                custom_id=f"card-edit-status|{ctx.message_id}",
             ),
         )
 
@@ -470,6 +502,15 @@ class Cards(utils.Extension):
             new_content = TALENT_REGEX.sub(
                 f"**Talent**: {ctx.responses['talent']}", message.content
             )
+        elif ctx.custom_id.startswith("card-edit-status"):
+            try:
+                true_status = Status[ctx.responses["status"].upper()]
+                new_content = STATUS_REGEX.sub(
+                    f"**Status**: {true_status.name.capitalize()}",
+                    message.content,
+                )
+            except KeyError:
+                return await ctx.send("Invalid status.", ephemeral=True)
         elif ctx.custom_id.startswith("card-edit-age"):
             new_content = AGE_REGEX.sub(
                 f"**Age**: {ctx.responses['age']}", message.content
@@ -536,6 +577,7 @@ class Cards(utils.Extension):
 
         name = a_match.group("name")
         talent = a_match.group("talent")
+        status = Status[a_match.group("status").upper()]
         age = a_match.group("age")
         weight = int(a_match.group("weight"))
         height = int(a_match.group("height"))
@@ -567,6 +609,7 @@ class Cards(utils.Extension):
                     "user_id": oc_by,
                     "oc_name": name,
                     "talent": talent,
+                    "status": status,
                     "age": age,
                     "weight": weight,
                     "height": height,
@@ -586,6 +629,7 @@ class Cards(utils.Extension):
                 data={
                     "oc_name": name,
                     "talent": talent,
+                    "status": status,
                     "age": age,
                     "weight": weight,
                     "height": height,
