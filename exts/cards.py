@@ -88,7 +88,7 @@ async def card_embed(bot: utils.MPBotBase, card: models.CharacterCard):
 
     embed.description = "\n".join(string_builder)
     embed.set_image(url=card.image_url)
-    embed.set_footer(f"Status: {card.status.lower()}")
+    embed.set_footer(f"Status: {card.status.capitalize()}")
     return embed
 
 
