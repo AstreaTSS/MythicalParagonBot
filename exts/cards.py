@@ -225,7 +225,8 @@ class Cards(utils.Extension):
         content_builder: list[str] = [
             "**Name**: N/A",
             "**Talent**: N/A",
-            "**Status**: Alive\n**Age**: N/A",
+            "**Status**: Alive",
+            "\n**Age**: N/A",
             "**Weight**: N/A lbs (N/A kg)",
             "**Height**: N/A in (N/A cm)",
             "**Pronouns**: N/A",
