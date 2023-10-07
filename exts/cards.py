@@ -260,7 +260,8 @@ class Cards(utils.Extension):
         content_builder: list[str] = [
             f"**Name**: {card.oc_name}",
             f"**Talent**: {card.talent}",
-            f"**Status**: {card.status.capitalize()}\n**Age**: {card.age}",
+            f"**Status**: {card.status.capitalize()}",
+            f"\n**Age**: {card.age}",
             f"**Weight**: {card.weight} lbs ({to_kg(card.weight)} kg)",
             (
                 f"**Height**: {card.height} in ({inches_display(card.height)},"
