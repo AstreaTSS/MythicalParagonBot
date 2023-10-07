@@ -551,9 +551,6 @@ class Cards(utils.Extension):
             talent,
             age,
             pronouns,
-            likes,
-            dislikes,
-            fears,
             oc_by,
             image_url,
         ):
