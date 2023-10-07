@@ -647,6 +647,22 @@ class Cards(utils.Extension):
 
         await ctx.message.delete()
 
+    @tansy.slash_command(
+        name="delete-card", default_member_permissions=ipy.Permissions.MANAGE_GUILD
+    )
+    async def delete_card(
+        self,
+        ctx: ipy.SlashContext,
+        user: ipy.Member = tansy.Option("The user who created the OC."),
+    ):
+        result = await models.CharacterCard.prisma().delete_many(
+            where={"user_id": user.id}
+        )
+        if result == 0:
+            raise ipy.errors.BadArgument("That user does not have a card.")
+
+        await ctx.send("Deleted the card.")
+
 
 def setup(bot: utils.MPBotBase) -> None:
     importlib.reload(utils)
