@@ -32,23 +32,10 @@ class SelfRoles(utils.Extension):
             max_values=len(self.pronoun_roles),
         )
 
-        self.app_status_roles: dict[str, tuple[int, str]] = {
-            "Applying": (1128886764472377344, "📝"),
-            "Undecided": (1128886792746192896, "❓"),
-            "Spectating": (1128886813445070970, "👁️"),
-        }
-
-        self.app_status_select = ipy.StringSelectMenu(
-            *(
-                ipy.StringSelectOption(
-                    label=k, value=f"mpappstatus:{v[0]}|{k}", emoji=v[1]
-                )
-                for k, v in self.app_status_roles.items()
-            ),
-            custom_id="mpappstatusselect",
-            placeholder="Select your status!",
-            min_values=0,
-            max_values=1,
+        self.kg_sepctator_button = ipy.Button(
+            style=ipy.ButtonStyle.BLUE,
+            label="Toggle KG Spectator",
+            custom_id="mprolebutton|1160697812212797480",
         )
 
         self.ping_roles: dict[str, tuple[int, str, str | None]] = {
@@ -102,17 +89,17 @@ class SelfRoles(utils.Extension):
 
     @prefixed.prefixed_command()
     @utils.proper_permissions()
-    async def send_app_status_select(self, ctx: prefixed.PrefixedContext):
+    async def send_kg_spectator_button(self, ctx: prefixed.PrefixedContext):
         embed = ipy.Embed(
-            title="Application Status",
+            title="KG Spectator",
             description=(
-                "Select your status in terms of applying. They will appear in"
-                " your profile as a blue role."
+                "If you wish to spectate the KG and aren't in the game, you can toggle"
+                " the KG Spectator role through this button."
             ),
             color=self.bot.color,
         )
 
-        await ctx.send(embed=embed, components=self.app_status_select)
+        await ctx.send(embed=embed, components=self.kg_sepctator_button)
         await ctx.message.delete()
 
     @prefixed.prefixed_command()
@@ -153,19 +140,19 @@ class SelfRoles(utils.Extension):
 
     @prefixed.prefixed_command()
     @utils.proper_permissions()
-    async def edit_app_status_select(
+    async def edit_kg_spectator_button(
         self, ctx: prefixed.PrefixedContext, msg: ipy.Message
     ):
         embed = ipy.Embed(
             title="Application Status",
             description=(
-                "Select your status in terms of applying. They will appear in"
-                " your profile as a blue role."
+                "If you wish to spectate the KG and aren't in the game, you can toggle"
+                " the KG Spectator role through this button."
             ),
             color=self.bot.color,
         )
 
-        await msg.edit(embed=embed, components=self.app_status_select)
+        await msg.edit(embed=embed, components=self.kg_sepctator_button)
         await ctx.reply("Done!")
 
     @prefixed.prefixed_command()
