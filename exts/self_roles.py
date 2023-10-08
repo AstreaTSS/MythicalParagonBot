@@ -91,7 +91,7 @@ class SelfRoles(utils.Extension):
     @utils.proper_permissions()
     async def send_kg_spectator_button(self, ctx: prefixed.PrefixedContext):
         embed = ipy.Embed(
-            title="KG Spectator",
+            title="KG Spectator Role",
             description=(
                 "If you wish to spectate the KG and aren't in the game, you can toggle"
                 " the KG Spectator role through this button."
@@ -144,7 +144,7 @@ class SelfRoles(utils.Extension):
         self, ctx: prefixed.PrefixedContext, msg: ipy.Message
     ):
         embed = ipy.Embed(
-            title="Application Status",
+            title="KG Spectator Role",
             description=(
                 "If you wish to spectate the KG and aren't in the game, you can toggle"
                 " the KG Spectator role through this button."
