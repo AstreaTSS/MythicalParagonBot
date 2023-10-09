@@ -696,16 +696,16 @@ class Cards(utils.Extension):
             if attribute == "height":
                 string_builder.append(
                     f"{index+1}: **{card.oc_name}** -"
-                    f" **{inches_display(card.height)}** ({to_cm(card.height)} cm)"
+                    f" {inches_display(card.height)} ({to_cm(card.height)} cm)"
                 )
             elif attribute == "weight":
                 string_builder.append(
-                    f"{index+1}: **{card.oc_name}** - **{card.weight} lbs**"
+                    f"{index+1}: **{card.oc_name}** - {card.weight} lbs"
                     f" ({to_kg(card.weight)} kg)"
                 )
             elif attribute == "age":
                 string_builder.append(
-                    f"{index+1}: **{card.oc_name}** - **{card.age}** years old"
+                    f"{index+1}: **{card.oc_name}** - {card.age} years old"
                 )
 
         if last_one:
