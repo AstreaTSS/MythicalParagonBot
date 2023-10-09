@@ -689,7 +689,7 @@ class Cards(utils.Extension):
         last_one: str | None = None
 
         if attribute == "age" and cards[0].age == "???":
-            last_one = f"\n**{cards[0].name}** - **???** years old"
+            last_one = f"\n**{cards[0].oc_name}** - **???** years old"
             cards = cards[1:]
 
         for index, card in enumerate(cards):
