@@ -135,6 +135,36 @@ class OtherCMDs(utils.Extension):
                 "<@&1138101611307212883>", allowed_mentions=ipy.AllowedMentions.all()
             )
 
+    @ipy.message_context_menu(
+        "Pin Message",
+        default_member_permissions=ipy.Permissions.ADMINISTRATOR,
+        dm_permission=False,
+    )
+    async def pin_message(self, ctx: ipy.ContextMenuContext):
+        message: ipy.Message = ctx.target  # type: ignore
+
+        if message.pinned:
+            await ctx.send("Message already pinned.", ephemeral=True)
+            return
+
+        await message.pin()
+        await ctx.send("Message pinned.", ephemeral=True)
+
+    @ipy.message_context_menu(
+        "Unpin Message",
+        default_member_permissions=ipy.Permissions.ADMINISTRATOR,
+        dm_permission=False,
+    )
+    async def unpin_message(self, ctx: ipy.ContextMenuContext):
+        message: ipy.Message = ctx.target  # type: ignore
+
+        if not message.pinned:
+            await ctx.send("Message already not pinned.", ephemeral=True)
+            return
+
+        await message.unpin()
+        await ctx.send("Message unpinned.", ephemeral=True)
+
 
 def setup(bot):
     importlib.reload(utils)
