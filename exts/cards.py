@@ -682,7 +682,7 @@ class Cards(utils.Extension):
         ),
     ):
         cards = await models.CharacterCard.prisma().find_many(
-            where={"type": 1}, order={attribute: "desc"}
+            where={"type": 1}, order={attribute: "desc", "oc_name": "asc"}
         )
 
         string_builder = collections.deque()
