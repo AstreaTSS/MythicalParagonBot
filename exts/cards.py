@@ -1,6 +1,8 @@
+import collections
 import importlib
 import re
 import time
+import typing
 
 import interactions as ipy
 import tansy
@@ -662,6 +664,58 @@ class Cards(utils.Extension):
             raise ipy.errors.BadArgument("That user does not have a card.")
 
         await ctx.send("Deleted the card.")
+
+    @tansy.slash_command(
+        name="rank-characters", description="Ranks characters based off an attribute."
+    )
+    async def rank_characters(
+        self,
+        ctx: ipy.SlashContext,
+        attribute: typing.Literal["height", "weight", "age"] = tansy.Option(
+            "What attribute to rank the characters by.",
+            choices=[
+                ipy.SlashCommandChoice("Height", "height"),
+                ipy.SlashCommandChoice("Weight", "weight"),
+                ipy.SlashCommandChoice("Age", "age"),
+            ],
+            type=str,
+        ),
+    ):
+        cards = await models.CharacterCard.prisma().find_many(
+            where={"type": 1}, order={attribute: "desc"}
+        )
+
+        string_builder = collections.deque()
+        last_one: str | None = None
+
+        for index, card in enumerate(cards):
+            if attribute == "height":
+                string_builder.append(
+                    f"{index+1}: {card.oc_name} -"
+                    f" {inches_display(card.height)} ({to_cm(card.height)} cm)"
+                )
+            elif attribute == "weight":
+                string_builder.append(
+                    f"{index+1}: {card.oc_name} - {card.weight} lbs"
+                    f" ({to_kg(card.weight)} kg)"
+                )
+            elif attribute == "age":
+                if card.age == "???":
+                    last_one = f"\n{card.oc_name} - ??? years old"
+                else:
+                    string_builder.append(
+                        f"{index+1}: {card.oc_name} - {card.age} years old"
+                    )
+
+        if last_one:
+            string_builder.append(last_one)
+
+        embed = ipy.Embed(
+            f"Character Rankings By {attribute.capitalize()}",
+            "\n".join(string_builder),
+            color=self.bot.color,
+        )
+        await ctx.send(embeds=embed)
 
 
 def setup(bot: utils.MPBotBase) -> None:
