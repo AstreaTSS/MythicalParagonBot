@@ -688,24 +688,25 @@ class Cards(utils.Extension):
         string_builder = collections.deque()
         last_one: str | None = None
 
+        if attribute == "age" and cards[0].age == "???":
+            last_one = f"\n**{cards[0].age}** - ??? years old"
+            cards = cards[1:]
+
         for index, card in enumerate(cards):
             if attribute == "height":
                 string_builder.append(
-                    f"{index+1}: {card.oc_name} -"
+                    f"{index+1}: **{card.oc_name}** -"
                     f" {inches_display(card.height)} ({to_cm(card.height)} cm)"
                 )
             elif attribute == "weight":
                 string_builder.append(
-                    f"{index+1}: {card.oc_name} - {card.weight} lbs"
+                    f"{index+1}: **{card.oc_name}** - {card.weight} lbs"
                     f" ({to_kg(card.weight)} kg)"
                 )
             elif attribute == "age":
-                if card.age == "???":
-                    last_one = f"\n{card.oc_name} - ??? years old"
-                else:
-                    string_builder.append(
-                        f"{index+1}: {card.oc_name} - {card.age} years old"
-                    )
+                string_builder.append(
+                    f"{index+1}: **{card.oc_name}** - {card.age} years old"
+                )
 
         if last_one:
             string_builder.append(last_one)
