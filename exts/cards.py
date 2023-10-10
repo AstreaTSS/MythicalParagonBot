@@ -3,9 +3,11 @@ import importlib
 import re
 import time
 import typing
+import unicodedata
 
 import interactions as ipy
 import tansy
+from interactions.ext import prefixed_commands as prefixed
 from prisma import models
 from prisma.enums import Status
 
@@ -717,6 +719,33 @@ class Cards(utils.Extension):
             color=self.bot.color,
         )
         await ctx.send(embeds=embed)
+
+    @prefixed.prefixed_command()
+    async def setup_private_threads(self, ctx: prefixed.PrefixedContext):
+        cards = await models.CharacterCard.prisma().find_many(
+            where={"type": 1}, order=[{"oc_name": "desc"}]
+        )
+
+        if typing.TYPE_CHECKING:
+            assert isinstance(ctx.channel, ipy.GuildText)
+
+        for card in cards:
+            user = await self.bot.fetch_user(card.user_id)
+
+            if not user:  # no.
+                continue
+
+            thread = await ctx.channel.create_thread(
+                name=f"{user.display_name} ({user.tag})",
+                thread_type=ipy.ChannelType.GUILD_PRIVATE_THREAD,
+                invitable=False,
+                auto_archive_duration=ipy.AutoArchiveDuration.ONE_WEEK,
+                reason="Setting up private threads.",
+            )
+
+            await thread.add_member(user)
+
+        await ctx.reply("Done!")
 
 
 def setup(bot: utils.MPBotBase) -> None:
