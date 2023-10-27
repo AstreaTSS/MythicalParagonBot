@@ -2,7 +2,7 @@ discord-py-interactions[speedup]==5.10.0
 tansy==0.8.0
 python-dotenv==1.0.0
 humanize==4.7.0
-orjson==3.9.4
+orjson==3.9.10
 redis[hiredis]==4.6.0
 types-redis>=4.4,<4.7
 prisma==0.10.0
