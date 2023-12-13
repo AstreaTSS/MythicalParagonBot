@@ -50,7 +50,7 @@ class ColorsFlyingHigh(utils.Extension):
             )
             await ctx.send(true_message)
         except Exception:
-            await ctx.send("Invalid password or salt.")
+            raise ipy.errors.BadArgument("Incorrect password or salt.") from None
 
     def _actual_encrypt(self, message: str, password: str, salt: str) -> str:
         ph = PasswordHasher()
