@@ -49,7 +49,7 @@ class ColorsFlyingHigh(utils.Extension):
                 self._actual_decrypt, message, password, salt
             )
             await ctx.send(true_message)
-        except (HashingError, ValueError):
+        except Exception:
             await ctx.send("Invalid password or salt.")
 
     def _actual_encrypt(self, message: str, password: str, salt: str) -> str:
