@@ -88,7 +88,11 @@ class ColorsFlyingHigh(utils.Extension):
         encrypted_message = await asyncio.to_thread(
             self._actual_encrypt, resp_ctx.responses["message"], password, salt
         )
-        await resp_ctx.send(encrypted_message)
+
+        if len(encrypted_message) > 2000:
+            await resp_ctx.send(embed=ipy.Embed(description=encrypted_message))
+        else:
+            await resp_ctx.send(encrypted_message)
 
 
 def setup(bot: utils.MPBotBase) -> None:
