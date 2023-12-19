@@ -40,7 +40,10 @@ class ColorsFlyingHigh(utils.Extension):
         ctx: ipy.SlashContext,
         message: int = tansy.Option(
             "The message to decrypt.",
-            choices=[ipy.SlashCommandChoice("Message 1", 1)],
+            choices=[
+                ipy.SlashCommandChoice("Message 1", 1),
+                ipy.SlashCommandChoice("Message 2", 2),
+            ],
         ),
         password: str = tansy.Option("The password to use."),
         salt: str = tansy.Option("The salt to use."),
