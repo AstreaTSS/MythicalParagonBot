@@ -44,7 +44,7 @@ class ColorsFlyingHigh(utils.Extension):
             choices=[
                 ipy.SlashCommandChoice("Message 1", 1),
                 ipy.SlashCommandChoice("Message 2", 2),
-                ipy.SlashCommandChoice("Message 3", 2),
+                ipy.SlashCommandChoice("Message 3", 3),
             ],
         ),
         password: str = tansy.Option("The password to use."),
