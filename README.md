@@ -2,4 +2,4 @@
 
 A Discord bot for Mythical Paragon: Rising Insurgence.
 
-[Join it here.](https://discord.gg/WtBjBMMjjJ)
+(The game has ended, and so the bot has been archived.)
